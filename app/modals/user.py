@@ -1,19 +1,14 @@
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import validates
-from sqlalchemy import Column, Integer, DateTime, String
+from app import db
 
-
-Base = declarative_base()
-
-class Users(Base):
+class Users(db.Model):
     __table__ = 'Users'
     
-    id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
-    asu_id =Column(Integer,nullable=False)
-    class_standing = Column(String(100), nullable=True)
-    email = Column(String(100))
-    phone_number = Column(String(100))
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), unique=True)
+    asu_id = db.Column(db.Integer,unique=True)
+    class_standing = db.Column(db.String(100))
+    email = db.Column(db.String(100))
+    phone_number = db.Column(db.String(100))
     
     def __init__(self,name,asu_id,class_standing,email,phone_number):
         self.name = name
