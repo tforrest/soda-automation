@@ -29,7 +29,6 @@ class Users(Base):
     def validate_email(self,email):
         return email
       
-     
     @validates('phone_number')
     def validate_phone_number(self,phone_number):
         return phone_number
