@@ -20,14 +20,7 @@ class Users(db.Model):
     def __repr__(self):
         return "User's name: %s" % self.name
     
-    @validates('email')
-    def validate_email(self,email):
-        return email
-      
-    @validates('phone_number')
-    def validate_phone_number(self,phone_number):
-        return phone_number
-    
+
     
     
     
