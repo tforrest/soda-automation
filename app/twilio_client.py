@@ -4,4 +4,4 @@ from twilio.rest import TwilioRestClient
 account_sid = ""
 auth_token = ""
 
-#client = TwilioRestClient(account_sid,auth_token)
+client = TwilioRestClient(account_sid,auth_token)

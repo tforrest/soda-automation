@@ -1,15 +1,18 @@
-from app import db
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, DateTime, String
 
 Base = declarative_base()
 
 class Event(Base):
     
-    id = db.Column(db.Interger, primary_key=True)
-    event_name = db.Column(db.String(50), unique=True)
-    host_company = db.Column(db.String(50))
-    description = db.Column(db.String(100))
-    start_time = db.Column(db.DateTime)
-    end_time = db.Column(db.DateTime)
+    __tablename__ = 'events'
+    
+    id = Column(Integer, primary_key=True)
+    event_name = Column(String(50), nullable=False)
+    host_company = Column(String(50), nullable=True)
+    description = Column(String(100), nullable=False)
+    start_time = Column(DateTime, nullable=False)
+    end_time = Column(DateTime, nullable=False)
     
     
     def __init__(self, id, event_name, host_company,description, start_time, end_time):
