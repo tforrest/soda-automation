@@ -1,7 +1,7 @@
 from app import app
 from twilio import TwilioRestClient
 
-class TwilioWrapper(object):
+class TwilioTextWrapper(object):
     
     def __init__(self,signature,debug):
         self._twilio_client = _get_twilio_client()
