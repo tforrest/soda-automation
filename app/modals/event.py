@@ -1,6 +1,7 @@
 from app import db
 
 class Event(db.Modal):
+    
     id = db.Column(db.Integer, primary_key=True)
     event_name = db.Column(db.String(50), nullable=False)
     host_company = db.Column(db.String(50), nullable=True)
