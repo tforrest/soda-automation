@@ -1,4 +1,4 @@
-from app import db
+from config import db
 
 class Event(db.Modal):
     id = db.Column(db.Integer, primary_key=True)
