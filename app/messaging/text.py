@@ -3,7 +3,7 @@ from twilio.rest import TwilioRestClient
 
 class TwilioTextWrapper(object):
     
-    def __init__(self,signature,debug):
+    def __init__(self,signature=None,debug=None):
         self._twilio_client = self._get_twilio_client()
         self._phone_number = app.config['TWILIO_NUM']
         self._signature = signature
@@ -26,9 +26,7 @@ class TwilioTextWrapper(object):
             from_=self._phone_number,
             body=message,
         )
-        
         return m
-        
        
 class TwilioWrapperException(Exception):
     pass
