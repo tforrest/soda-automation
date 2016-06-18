@@ -11,3 +11,5 @@ db = SQLAlchemy(app)
 app.config['TWILIO_ACCOUNT_SID'] = os.environ['TWILIO_ACCOUNT_SID']
 app.config['TWILIO_AUTH_TOKEN'] = os.environ['TWILIO_AUTH_TOKEN']
 app.config['TWILIO_NUM'] = os.environ["TWILIO_NUM"]
+app.config['MAILCHIMP_USER'] = os.environ['MAILCHIMP_USER']
+app.config['MAILCHIMP_AUTH'] = os.environ['MAILCHIMP_AUTH']
