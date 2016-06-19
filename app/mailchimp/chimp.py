@@ -94,8 +94,8 @@ class ChimpList(object):
        
        # Pull out the desired attrbutes 
        data = dict()
-       data["id"] = member["id"]
-       data["email"] = member["email_address"]
+       data["ID"] = member["id"]
+       data["EMAIL"] = member["email_address"]
        
        # copy data in merge_fields
        temp = member["merge_fields"].copy()
@@ -110,6 +110,15 @@ class ChimpMember(object):
     """Object holding a single members information"""
     
     def __init__(self,data):
-        # Initalize any number of member attributes 
-        for key, value in data.iteritems():
-            setattr(self,key,value)
+        # TO-DO find better way to be explict yet not use dicts
+        # to not have key erros 
+        self.id = data['ID']
+        self.first_name = data['FNAME']
+        self.last_name = data['LNAME']
+        self.email = data['EMAIL']
+        self.number = data['NUMBER']
+        self.email = data['EMAIL']
+        self.number = data['NUMBER']
+        self.asuid = data['ASUID']
+        self.class_standing = data['CLASS']
+    
