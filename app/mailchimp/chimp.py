@@ -1,7 +1,6 @@
 from requests.auth import HTTPBasicAuth
 from util import handle_chimp_response
 import requests
-import json
 import os
 
 class ChimpRequester(object):
