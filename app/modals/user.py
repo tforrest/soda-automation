@@ -1,8 +1,10 @@
 from config import db
 
-class User(db.Modal):
+class ASUStudent(db.Modal):
+    
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    first_name = db.Column(db.String(100), nullable=False)
+    last_name = db.Column(db.String(100), nullable=False)
     asu_id = db.Column(db.Integer,nullable=False)
     class_standing = db.Column(db.String(100), nullable=True)
     email = db.Column(db.String(100))
@@ -16,15 +18,4 @@ class User(db.Modal):
         self.phone_number = phone_number
         
     def __repr__(self):
-        return "User's name: %s" % self.name
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        return "ASU Student: %s %s".format(self.fist_name, self.last_name)
