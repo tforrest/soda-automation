@@ -4,7 +4,7 @@ import json
 import os
 
 
-class MailChimpBaseWrapper(object):
+class ChimpRequester(object):
     """Base MailChimp Class for querying data"""
     
     def __init__(self,**kwargs):
@@ -69,7 +69,7 @@ class MailChimpBaseWrapper(object):
        
         return mail_chimp_list
   
-class MailChimpListBase(object):
+class ChimpList(object):
     """Object that holds a mail chimp with users"""
     
     def __init__(self,list_name,members):
@@ -102,7 +102,7 @@ class MailChimpListBase(object):
        
        return p_m
          
-class MailChimpBaseMember(object):
+class ChimpMember(object):
     """Object holding a single members information"""
     
     def __init__(self,**kwargs):
