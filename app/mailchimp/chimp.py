@@ -68,7 +68,7 @@ class ChimpRequester(object):
         
         # Create a new list and filter out data not needed
         
-        mail_chimp_list = MailChimpListBase(name,list_id,json_response)
+        mail_chimp_list = ChimpList(name,list_id,json_response)
        
         return mail_chimp_list
   
@@ -101,7 +101,7 @@ class ChimpList(object):
        data.update(temp)
        
        # Create a member object 
-       p_m = MailChimpBaseMember(data)
+       p_m = ChimpMember(data)
        
        return p_m
          
