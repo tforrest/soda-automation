@@ -1,8 +1,8 @@
 from requests.auth import HTTPBasicAuth
+from util import handle_chimp_response
 import requests
 import json
 import os
-
 
 class ChimpRequester(object):
     """Base MailChimp Class for querying data"""
@@ -20,52 +20,55 @@ class ChimpRequester(object):
          s = requests.Session()
          s.auth = (user,apikey)
          return s
-        
+    
+    @handle_chimp_response    
     def _post_request(self,path):
         """Return response from POST request"""
            
         r = self._session.post(self._base_url+path)
         
         return r.json()
-     
-    def _get_request(self,path,body):
+    
+    @handle_chimp_response   
+    def _get_request(self,path):
         """Return response from GET request"""
         
-        r = self._session.get(self._base_url+path,body)
+        r = self._session.get(self._base_url+path)
        
         return r.json()
-        
+    
+    @handle_chimp_response   
     def _patch_request(self,path):
         """Return response from PATCH request"""
         r = self._session.patch(self._base_url+path)
         
         return r.json()
-        
+    
+    @handle_chimp_response   
     def _put_request(self,path):
         """Return response from PUT request"""
         r = self._session.put(self._base_url+path)
         
         return r.json()
     
+    @handle_chimp_response   
     def _delete_request(self,path):
         """Return response from DELETE request"""
         r = self._session.delete(self._base_url+path)
         
-        return r.json()
- 
+        return r.json()  
+
     def get_list(self,list_id,name,body=""):
         """"Return a list of people on  
             a mail chimp list 
         """
         path = "lists/{}/members".format(list_id)
         
-        json_response = self._get_request(path,body)
-        
-        l = json.loads(json_response)
+        json_response = self._get_request(path)
         
         # Create a new list and filter out data not needed
         
-        mail_chimp_list = MailChimpListBase(name,list_id,l)
+        mail_chimp_list = MailChimpListBase(name,list_id,json_response)
        
         return mail_chimp_list
   
