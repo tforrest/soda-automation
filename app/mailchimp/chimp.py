@@ -79,7 +79,12 @@ class ChimpList(object):
     def __init__(self,list_name,list_id,members):
         self.list_name = list_name 
         self.list_id = list_id
-        self.members = self._process_members(members)
+        self._members = self._process_members(members)
+    
+    def print_all(self):
+        print "List Name:{}\nList ID:{}\nMembers:\n".format(self.list_name,self.list_id)
+        for m in self._members:
+            m.print_info()
  
     def _process_members(self,members):
        """Process the members into objects"""
@@ -110,15 +115,29 @@ class ChimpMember(object):
     """Object holding a single members information"""
     
     def __init__(self,data):
-        # TO-DO find better way to be explict yet not use dicts
+        # TO-DO find better way to be explicit yet not use dicts
         # to not have key erros 
         self.id = data['ID']
         self.first_name = data['FNAME']
         self.last_name = data['LNAME']
         self.email = data['EMAIL']
         self.number = data['NUMBER']
-        self.email = data['EMAIL']
-        self.number = data['NUMBER']
         self.asuid = data['ASUID']
         self.class_standing = data['CLASS']
+
+    def print_info(self):
+        """"Print out memeber fields"""
+        tmpl = ("First Name: {first_name}\n"
+                "Last Name: {last_name}\n"
+                "Email: {email}\n"
+                "Phone number: {number}\n"
+                "ASU ID: {asuid}\n"
+                "Class Standing: {class_standing}\n")
+        print tmpl.format(
+            first_name=self.first_name, \
+            last_name=self.last_name, \
+            email=self.email, \
+            number=self.number, \
+            asuid=self.asuid,
+            class_standing=self.class_standing)
     
