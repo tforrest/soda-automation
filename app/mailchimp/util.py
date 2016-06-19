@@ -8,9 +8,10 @@ def handle_chimp_response(func):
     """
     def wrapper(*args,**kwargs):
         r = func(*args,**kwargs)
-        if resp_match(str(r["status"])):
-            raise ChimpException(r["status"],r["title"],r["detail"])
-        return r
+        j = r.json()
+        if resp_match(str(r.status_code)):
+            raise ChimpException(j["status"],j["title"],j["detail"])
+        return j
     return wrapper
     
     

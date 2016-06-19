@@ -27,7 +27,7 @@ class ChimpRequester(object):
            
         r = self._session.post(self._base_url+path)
         
-        return r.json()
+        return r
     
     @handle_chimp_response   
     def _get_request(self,path):
@@ -35,30 +35,30 @@ class ChimpRequester(object):
         
         r = self._session.get(self._base_url+path)
        
-        return r.json()
+        return r
     
     @handle_chimp_response   
     def _patch_request(self,path):
         """Return response from PATCH request"""
         r = self._session.patch(self._base_url+path)
         
-        return r.json()
+        return r
     
     @handle_chimp_response   
     def _put_request(self,path):
         """Return response from PUT request"""
         r = self._session.put(self._base_url+path)
         
-        return r.json()
+        return r
     
     @handle_chimp_response   
     def _delete_request(self,path):
         """Return response from DELETE request"""
         r = self._session.delete(self._base_url+path)
         
-        return r.json()  
+        return r  
 
-    def get_list(self,list_id,name,body=""):
+    def get_list(self,list_id,list_name,body=""):
         """"Return a list of people on  
             a mail chimp list 
         """
@@ -66,16 +66,17 @@ class ChimpRequester(object):
         
         json_response = self._get_request(path)
         
+        
         # Create a new list and filter out data not needed
         
-        mail_chimp_list = ChimpList(name,list_id,json_response)
+        mail_chimp_list = ChimpList(list_name,list_id,json_response["members"])
        
         return mail_chimp_list
   
 class ChimpList(object):
     """Object that holds a mail chimp with users"""
     
-    def __init__(self,list_name,members):
+    def __init__(self,list_name,list_id,members):
         self.list_name = list_name 
         self.list_id = list_id
         self.members = self._process_members(members)
@@ -94,7 +95,7 @@ class ChimpList(object):
        # Pull out the desired attrbutes 
        data = dict()
        data["id"] = member["id"]
-       data["email"] = member["email"]
+       data["email"] = member["email_address"]
        
        # copy data in merge_fields
        temp = member["merge_fields"].copy()
@@ -108,7 +109,7 @@ class ChimpList(object):
 class ChimpMember(object):
     """Object holding a single members information"""
     
-    def __init__(self,**kwargs):
+    def __init__(self,data):
         # Initalize any number of member attributes 
-        for key, value in kwargs.iterm():
+        for key, value in data.iteritems():
             setattr(self,key,value)
