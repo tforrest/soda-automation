@@ -1,5 +1,4 @@
 from requests.auth import HTTPBasicAuth
-from app import db
 import requests
 import json
 import os
@@ -16,10 +15,10 @@ class MailChimpBaseWrapper(object):
         self._api_key = os.environ['MAILCHIMP_AUTH']
         self._session = self._get_session(self._user_name,self._api_key)
   
-     def _get_session(self,user,apikey):
+    def _get_session(self,user,apikey):
          """Return mailchimp session"""
          s = requests.Session()
-         s.auth(user,apikey)
+         s.auth = (user,apikey)
          return s
         
     def _post_request(self,path):
@@ -57,7 +56,7 @@ class MailChimpBaseWrapper(object):
     def get_list(self,list_id,name,body=""):
         """"Return a list of people on  
             a mail chimp list 
-        """"
+        """
         path = "lists/{}/members".format(list_id)
         
         json_response = self._get_request(path,body)
@@ -78,7 +77,7 @@ class MailChimpListBase(object):
         self.list_id = list_id
         self.members = self._process_members(members)
  
-   def _process_members(self,members):
+    def _process_members(self,members):
        """Process the members into objects"""
        # list of members objects 
        p_m = []
@@ -86,7 +85,7 @@ class MailChimpListBase(object):
            p_m.append(self._process(m))
        return p_m
  
-   def _process(self,member):
+    def _process(self,member):
        """Process a single member"""
        
        # Pull out the desired attrbutes 
@@ -104,7 +103,7 @@ class MailChimpListBase(object):
        return p_m
          
 class MailChimpBaseMember(object):
-    """Object holding a single member's information"""
+    """Object holding a single members information"""
     
     def __init__(self,**kwargs):
         # Initalize any number of member attributes 
