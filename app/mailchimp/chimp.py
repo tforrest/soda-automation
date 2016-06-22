@@ -1,5 +1,6 @@
 from requests.auth import HTTPBasicAuth
 from util import handle_chimp_response
+from models import 
 import requests
 import os
 
@@ -65,7 +66,6 @@ class ChimpRequester(object):
         
         json_response = self._get_request(path)
         
-        
         # Create a new list and filter out data not needed
         
         mail_chimp_list = ChimpList(list_name,list_id,json_response["members"])
@@ -94,7 +94,7 @@ class ChimpList(object):
        return p_m
  
     def _process(self,member):
-       """Process a single member"""
+       """Process a single member and filter out data"""
        
        # Pull out the desired attrbutes 
        data = dict()
@@ -123,6 +123,10 @@ class ChimpMember(object):
         self.number = data['NUMBER']
         self.asuid = data['ASUID']
         self.class_standing = data['CLASS']
+        
+    def insert_to_db(self):
+        """Insert chimpMember into database"""
+        new_db_entry = 
 
     def print_info(self):
         """"Print out memeber fields"""
