@@ -1,21 +1,22 @@
 from flask_restful import Resource, fields
 from flask_restful import marshal_with, reqparse
+from flask import request, jsonify
 from mailchimp import chimp
 import json
 
-list_info = {
-    'list_id': fields.String,
-    'list_name': fields.String
-}
+# list_info = {
+#     'list_id': fields.String,
+#     'list_name': fields.String
+# }
 
-student_field = {
-    'first_name' :fields.String,
-    'last_name' : fields.String,
-    'email': fields.String,
-    'number': fields.String,
-    'asuid' : fields.String,
-    'class_standing': fields.String
-}
+# student_field = {
+#     'first_name' :fields.String,
+#     'last_name' : fields.String,
+#     'email': fields.String,
+#     'number': fields.String,
+#     'asuid' : fields.String,
+#     'class_standing': fields.String
+# }
 
 class MailChimpApi(Resource):
     """Rest API for parsing MailChimp Data"""
@@ -25,12 +26,13 @@ class MailChimpApi(Resource):
         args = self.parse_list_id().parse_args()
         r = chimp.ChimpRequester()
         return r.get_list(list_id,"test",json=True)
-    @marshal_with(student_field)  
+        
+ 
     def post(self,list_id):
-        args = self.parse_list_id().parse_args()
+        json_data = request.get_json()
+        print json_data
         r = chimp.ChimpRequester()
-        
-        
+        return r.add_member(list_id,json_data)
         
     def parse_list_id(self):
         lid_parser = reqparse.RequestParser()
@@ -43,29 +45,29 @@ class MailChimpApi(Resource):
     def parse_incoming_student(self):
         parser = reqparse.RequestParser()
         parser.add_argument(
-            'first_name', dest='fiest_name',
-            type=str, help='First name of student',
-            required=True,
+            'first_name', dest='first_name',
+             help='First name of student',
+            required=True, location='application/json',
         )
         parser.add_argument(
             'last_name', dest='last_name',
-            type=str, help='Last name of student',
-            required=True,
+            help='Last name of student',
+            required=True,location='form',
         )
         parser.add_argument(
             'email', dest='email',
-            type=str, help='Email of student',
+            help='Email of student', location='form',
         )
         parser.add_argument(
             'number', dest='number',
-            type=str, help="Cell Number for student",
+             help="Cell Number for student", location='form',
         )
         parser.add_argument(
             'asuid', dest='asuid',
             type=str, required=True,
-            help='ASU id of student',
+            help='ASU id of student', location='form',
         )
-        
+        return parser
         
         
  

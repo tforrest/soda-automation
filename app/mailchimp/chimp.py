@@ -42,9 +42,9 @@ class ChimpRequester(object):
         return r
     
     @handle_chimp_response   
-    def _put_request(self,path):
+    def _put_request(self,path,body=""):
         """Return response from PUT request"""
-        r = self._session.put(self._base_url+path)
+        r = self._session.put(self._base_url+path,body)
         return r
     
     @handle_chimp_response   
@@ -59,8 +59,9 @@ class ChimpRequester(object):
          hash = hashlib.md5(input(list_id).encode())
          
          path = "lists/{}/members/{}".format(list_id,hash.hexdigest())
-        
-         json_respose = self._patch_request(path,data)
+         print "test"
+         print path
+         json_respose = self._put_request(path,data)
          
          return json_respose
 
