@@ -1,5 +1,6 @@
 from requests.auth import HTTPBasicAuth
 from util import handle_chimp_response
+import hashlib
 import requests
 import os
 
@@ -35,9 +36,9 @@ class ChimpRequester(object):
         return r
     
     @handle_chimp_response   
-    def _patch_request(self,path):
+    def _patch_request(self,path,body=""):
         """Return response from PATCH request"""
-        r = self._session.patch(self._base_url+path)
+        r = self._session.patch(self._base_url+path,body=body)
         return r
     
     @handle_chimp_response   
@@ -50,7 +51,18 @@ class ChimpRequester(object):
     def _delete_request(self,path):
         """Return response from DELETE request"""
         r = self._session.delete(self._base_url+path)
-        return r  
+        return r
+        
+    def add_member(self,list_id,data):
+         """"Add a member to mail chimplist"""
+         
+         hash = hashlib.md5(input(list_id).encode())
+         
+         path = "lists/{}/members/{}".format(list_id,hash.hexdigest())
+        
+         json_respose = self._patch_request(path,data)
+         
+         return json_respose
 
     def get_list(self,list_id,list_name,json=False):
         """"Return a list of people on  
