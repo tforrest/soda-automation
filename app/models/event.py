@@ -2,30 +2,30 @@ from config import db
 
 # helper table for many-to-many relationship between students and events
 
-events = db.Table('events',
-            db.Column('event_id',db.Integer, db.ForeignKey('event.id')),
-            db.Column('student_id',db.Integer,db.ForeignKey('student.id'))
-)
+# events = db.Table('events',
+#             db.Column('event_id',db.Integer, db.ForeignKey('event.id')),
+#             db.Column('student_id',db.Integer,db.ForeignKey('student.id'))
+# )
 
-class Event(db.Model):
-    """Basic Model for events"""
-    id = db.Column(db.Integer, primary_key=True)
-    event_name = db.Column(db.String(50), nullable=False)
-    host_company = db.Column(db.String(50), nullable=True)
-    description = db.Column(db.String(100), nullable=False)
-    start_time = db.Column(db.DateTime, nullable=False)
-    end_time = db.Column(db.DateTime, nullable=False)
-    attendees = db.relastionship('Student',secondary=events,backref=db.backref('events',lazy='dynamic'))
+# class Event(db.Model):
+#     """Basic Model for events"""
+#     id = db.Column(db.Integer, primary_key=True)
+#     event_name = db.Column(db.String(50), nullable=False)
+#     host_company = db.Column(db.String(50), nullable=True)
+#     description = db.Column(db.String(100), nullable=False)
+#     start_time = db.Column(db.DateTime, nullable=False)
+#     end_time = db.Column(db.DateTime, nullable=False)
+#     attendees = db.relationship('Student',secondary=events,backref=db.backref('events',lazy='dynamic'))
     
-    def __init__(self, id, event_name, host_company,description, start_time, end_time):
-        self.event_name = event_name
-        self.host_company = host_company
-        self.description = description
-        self.start_time = start_time
-        self.end_time = end_time
+#     def __init__(self, id, event_name, host_company,description, start_time, end_time):
+#         self.event_name = event_name
+#         self.host_company = host_company
+#         self.description = description
+#         self.start_time = start_time
+#         self.end_time = end_time
     
-    def __repr__(self):
-        return "Event: %s" % self.name
+#     def __repr__(self):
+#         return "Event: %s" % self.name
         
 class Student(db.Model):
     """Basic Model for asu students"""
@@ -37,18 +37,16 @@ class Student(db.Model):
     class_standing = db.Column(db.String(100), nullable=True)
     email = db.Column(db.String(100))
     phone_number = db.Column(db.String(100))
-    events = db.relationship('Event',secondary=events, backref=db.backref('students',lazy='dynamic'))
     
-    def __init__(self,name,asu_id,class_standing,email,phone_number):
-        self.name = name
+    def __init__(self,first_name,last_name,asu_id,class_standing,email,phone_number):
+        self.first_name = first_name
+        self.last_name = last_name
         self.asu_id = asu_id
         self.class_standing = class_standing
         self.email = email
         self.phone_number = phone_number
         
     def __repr__(self):
-        return "ASU Student: %s %s".format(self.fist_name, self.last_name)
-    
-    
-    
+        return "ASU Student: %s %s".format(self.first_name, self.last_name)
+   
     

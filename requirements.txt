@@ -2,3 +2,4 @@ SQLAlchemy==1.0.13
 Flask
 Twilio==5.4.0
 Requests
+flask-restful
