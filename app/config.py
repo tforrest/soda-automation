@@ -2,12 +2,16 @@ import os
 from flask import Flask 
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
+from api import api
+
 
 
 # set up app 
 app = Flask(__name__)
 # set up Api
-api = Api(app)
+service = Api(app)
+service.add_resource(api.MailChimpListApi,'/list/<list_id>',endpoint='list')
+
 # set up database
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['FLASKDB']
 db = SQLAlchemy(app)

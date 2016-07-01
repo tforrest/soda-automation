@@ -68,6 +68,7 @@ class ChimpRequester(object):
         """"Return a list of people on  
             a mail chimp list 
         """
+        
         path = "lists/{}/members".format(list_id)
         
         json_response = self._get_request(path)

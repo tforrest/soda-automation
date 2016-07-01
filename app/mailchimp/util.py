@@ -34,21 +34,16 @@ def transform_member(func):
     """Ultility function that process a request to mailchimp schema""" 
     
     def wrapper(*args,**kwargs):
-        if kwargs['data']:
-            try:
-                data = kwargs['data']
-                processed = deepcopy(mailchimp_shell_member)
-                processed['email'] =  data.pop('email')
-                processed['merge_fields'].update(data)
-                
-                # set and return transformed data
-                kwargs['data'] = processed
-                return func(*args,**kwargs)
-            except:
-                raise FailedTransform(data)
-        else:
-            raise FailedTransform("No data")
-         
+       
+        data = kwargs['data']
+        processed = deepcopy(mailchimp_shell_member)
+        processed['email'] =  data.pop('email')
+        processed['merge_fields'].update(data)
+
+        # set and return transformed data
+        kwargs['data'] = processed
+        return func(*args,**kwargs)
+           
 
 class FailedTransform(Exception):
     """Exception for Failed Mailchimp Transform"""
