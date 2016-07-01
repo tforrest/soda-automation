@@ -1,5 +1,6 @@
 from requests.auth import HTTPBasicAuth
 from util import handle_chimp_response
+from util import transform_member
 import hashlib
 import requests
 import os
@@ -53,15 +54,13 @@ class ChimpRequester(object):
         r = self._session.delete(self._base_url+path)
         return r
         
+        
+    @transform_member 
     def add_member(self,list_id,data):
          """"Add a member to mail chimplist"""
          
-         hash = hashlib.md5(input(list_id).encode())
-         
-         path = "lists/{}/members/{}".format(list_id,hash.hexdigest())
-         print "test"
-         print path
-         json_respose = self._put_request(path,data)
+         path = "lists/{}/members/".format(list_id)
+         json_respose = self._post_request(path,data)
          
          return json_respose
 
