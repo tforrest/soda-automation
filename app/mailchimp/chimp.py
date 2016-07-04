@@ -2,7 +2,6 @@ from requests.auth import HTTPBasicAuth
 from util import handle_chimp_response
 from util import transform_member
 from json import dumps
-import hashlib
 import requests
 import os
 

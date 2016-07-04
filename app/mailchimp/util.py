@@ -25,6 +25,8 @@ def handle_chimp_response(func):
         if resp_match(str(r.status_code)):
             logging.error("Failed to execute mailchimp command")
             logging.error(r.json())
+        else:
+            logging.info("Mailchimp operation success")
         return r
     return wrapper
   

@@ -11,6 +11,7 @@ app = Flask(__name__)
 # set up Api
 service = Api(app)
 service.add_resource(api.MailChimpListApi,'/list/<list_id>',endpoint='list')
+service.add_resource(api.CheckMailChimp,'/member/<asu_id>',endpoint='member')
 
 # set up database
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['FLASKDB']
