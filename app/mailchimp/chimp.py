@@ -1,6 +1,7 @@
 from requests.auth import HTTPBasicAuth
 from util import handle_chimp_response
 from util import transform_member
+from json import dumps
 import hashlib
 import requests
 import os
@@ -23,10 +24,10 @@ class ChimpRequester(object):
          return s
     
     @handle_chimp_response    
-    def _post_request(self,path):
+    def _post_request(self,path,body=""):
         """Return response from POST request"""
            
-        r = self._session.post(self._base_url+path)
+        r = self._session.post(self._base_url+path,dumps(body))
         return r
     
     @handle_chimp_response   
@@ -56,12 +57,10 @@ class ChimpRequester(object):
         
         
     @transform_member 
-    def add_member(self,list_id,data):
+    def add_member(self,list_id,data={}):
          """"Add a member to mail chimplist"""
-         
          path = "lists/{}/members/".format(list_id)
          json_respose = self._post_request(path,data)
-         
          return json_respose
 
     def get_list(self,list_id,list_name,json=False):
@@ -72,29 +71,8 @@ class ChimpRequester(object):
         path = "lists/{}/members".format(list_id)
         
         json_response = self._get_request(path)
-        
-        # clean and return json
-        if json:
-            l = []
-            for member in json_response['members']:
-                data = dict()
-                data["ID"] = member["id"]
-                data["EMAIL"] = member["email_address"]
-                
-                # copy data in merge_fields
-                temp = member["merge_fields"].copy()
-                data.update(temp)
-                
-                l.append(data)
-            return l
-                
-        
-        # Create a new list and filter out data not needed
-        
-        mail_chimp_list = ChimpList(list_name,list_id,json_response["members"])
-       
-        return mail_chimp_list
-  
+        return json_response
+
 class ChimpList(object):
     """Object that holds a mail chimp with users"""
     

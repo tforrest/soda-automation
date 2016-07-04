@@ -1,4 +1,5 @@
 from copy import deepcopy
+import logging
 from time import gmtime, strftime
 import re
 
@@ -9,8 +10,6 @@ mailchimp_shell_member = {
     "email_type": "html",
     "status": "subscribed",
     "merge_fields": {},
-    "interests": "",
-    "vip":"",
     "location": {},
     "ip_signup": "",
     "timestamp_signup": "",
@@ -19,30 +18,28 @@ mailchimp_shell_member = {
 }
 
 def handle_chimp_response(func):
-    """Utility function that pre processes a 
-       mailchimp response
+    """Utility function that loggs the error
     """
     def wrapper(*args,**kwargs):
         r = func(*args,**kwargs)
-        j = r.json()
         if resp_match(str(r.status_code)):
-            raise ChimpException(j["status"],j["title"],j["detail"])
-        return j
+            logging.error("Failed to execute mailchimp command")
+            logging.error(r.json())
+        return r
     return wrapper
   
 def transform_member(func):
     """Ultility function that process a request to mailchimp schema""" 
     
     def wrapper(*args,**kwargs):
-       
-        data = kwargs['data']
+        data = args[2]
         processed = deepcopy(mailchimp_shell_member)
-        processed['email'] =  data.pop('email')
+        processed['email_address'] =  data.pop('email_address')
         processed['merge_fields'].update(data)
 
         # set and return transformed data
-        kwargs['data'] = processed
-        return func(*args,**kwargs)
+        return func(args[0],args[1],processed)
+    return wrapper
            
 
 class FailedTransform(Exception):
@@ -53,6 +50,5 @@ class FailedTransform(Exception):
     
 class ChimpException(Exception):
     """Exception for Bad Response from MailChimp"""
-    def __init__(self,status,title,detail):
-        self.error_string = 'Chimp Exception Status:{}, Title: {}, Detail: {}'
-        Exception.__init__(self,self.error_string.format(status,title,detail))
+    def __init__(self,error_string):
+        Exception.__init__(self,error_string)

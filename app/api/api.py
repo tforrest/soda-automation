@@ -1,44 +1,50 @@
 from flask_restful import Resource, fields
-from flask_restful import marshal_with, reqparse
-from flask import request, jsonify
+from flask_restful import reqparse
+from flask import request
 from util import validate_memmber
+from util import resp_match
 
 from mailchimp import chimp
 
+requester = chimp.ChimpRequester()
 
 class MailChimpListApi(Resource):
     """Rest API for parsing MailChimp Data"""
     
     def __init__(self):
-        self.requester = chimp.ChimpRequester()
         super(Resource,self).__init__()
    
     def get(self,list_id):
         """A list of members from mailchimp"""
-        args = self.parse_list_id().parse_args()
-        return self.requester.get_list(list_id,"test",json=True)
+        r = requester.get_list(list_id,"test",json=True)
+        if resp_match(str(r.status_code)):
+            return r.json(),r.status_code
         
+        resp = self._transform_json(r.json())
+        return resp, r.status_code
 
     def post(self,list_id):
-        """Add a member to a list"""
-        json_data = request.get_json()
+        """Add a member(s) to a list"""
+        data = request.get_json()
         # check if valid request
-        v = validate_memmber(json_data)
-        
+        v = validate_memmber(data)
         if not v[0]:
             return v[1], 400
-        try:
-            pass
-            # result = self.requester.add_member(list_id,json_data)
-        except Exception as e:
-            return e, 400
-        return "",204
-        
-    def parse_list_id(self):
-        lid_parser = reqparse.RequestParser()
-        lid_parser.add_argument(
-            'list_id', dest='list_id',
-            type=str, help='ID of the mailchimp list',
-        )
-        return lid_parser
-        
+        result = requester.add_member(list_id,data)
+        if not result:
+            return "Error sending mailchimp request", 418
+        return result,204
+        return r.json(),r.status_code
+
+    def _transform_json(self,json_response):
+        l = []
+        for member in json_response['members']:
+            data = dict()
+            data["ID"] = member["id"]
+            data["EMAIL"] = member["email_address"]
+            
+            # copy data in merge_fields
+            temp = member["merge_fields"].copy()
+            data.update(temp)
+            l.append(data)
+        return l
