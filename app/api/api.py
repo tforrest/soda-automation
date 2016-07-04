@@ -8,7 +8,7 @@ from mailchimp import chimp
 
 requester = chimp.ChimpRequester()
 
-class MailChimpListApi(Resource):
+class MailChimpList(Resource):
     """Rest API for parsing MailChimp List Data"""
     
     def __init__(self):
@@ -47,7 +47,7 @@ class MailChimpListApi(Resource):
             l.append(data)
         return l
 
-class CheckMailChimp(Resource):
+class MailChimpMember(Resource):
     """Check if a student is in mailchimp"""
 
     def __init__(self):
@@ -59,7 +59,7 @@ class CheckMailChimp(Resource):
             pass
             # add member to event and incrememt attendence
         else:
-            return {"Response":"Student not signed up for mailchimp"}, 404
+            return {"Not Found":"Student not signed up for mailchimp"}, 404
 
     def _is_mailchimp_member(self,asu_id):
         """Check if asu student is part of soda mailchimp list"""
