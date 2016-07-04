@@ -4,4 +4,4 @@ Flask==0.11.1
 Twilio==5.4.0
 Requests==2.10.0
 flask-restful==0.3.5
-flask_sqlalchemy
+flask_sqlalchemy==2.1
