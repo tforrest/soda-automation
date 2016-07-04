@@ -15,4 +15,5 @@ service.add_resource(api.CheckMailChimp,'/member/<asu_id>',endpoint='member')
 
 # set up database
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['FLASKDB']
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
