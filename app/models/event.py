@@ -46,7 +46,8 @@ class Student(db.Model):
         self.email = email
         self.phone_number = phone_number
         
-    def __repr__(self):
+    def __str__(self):
         return "ASU Student: %s %s".format(self.first_name, self.last_name)
    
-    
+    def __repr__(self):
+    	return "ASU Student: %d, %s %s".format(self.asu_id, self.first_name, self.last_name)
