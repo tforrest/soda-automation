@@ -31,7 +31,7 @@ def handle_chimp_response(func):
     return wrapper
   
 def transform_member(func):
-    """Ultility function that process a request to mailchimp schema""" 
+    """Utility function that process a request to mailchimp schema""" 
     
     def wrapper(*args,**kwargs):
         data = args[2]
