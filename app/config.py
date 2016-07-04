@@ -14,4 +14,5 @@ service.add_resource(api.MailChimpListApi,'/list/<list_id>',endpoint='list')
 
 # set up database
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['FLASKDB']
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
