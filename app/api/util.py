@@ -28,7 +28,7 @@ student_schema = {
     }
 }
 
-resp_match = lambda status: re.match(r"^[4,5][0-9][0-9]$",status)
+bad_resp_match = lambda status: re.match(r"^[4,5][0-9][0-9]$",status)
 
 v = Validator()
 

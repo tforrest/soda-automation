@@ -2,7 +2,7 @@ from flask_restful import Resource, fields
 from flask_restful import reqparse
 from flask import request
 from util import validate_memmber
-from util import resp_match
+from util import bad_resp_match
 
 from mailchimp import chimp
 
@@ -17,7 +17,7 @@ class MailChimpList(Resource):
     def get(self,list_id):
         """A list of members from mailchimp"""
         r = requester.get_list(list_id,"test",json=True)
-        if resp_match(str(r.status_code)):
+        if bad_resp_match(str(r.status_code)):
             return r.json(),r.status_code
         resp = self._transform_mailchimp_response(r.json())
         return resp, r.status_code
