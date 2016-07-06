@@ -6,3 +6,4 @@ Requests==2.10.0
 flask-restful==0.3.5
 flask_sqlalchemy==2.1
 redis==2.10.5
+flask_script==2.0.5

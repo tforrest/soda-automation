@@ -10,7 +10,6 @@ requester = chimp.ChimpRequester()
 
 
 class MailChimpList(Resource):
-    
     """Rest API for parsing MailChimp List Data"""
     def __init__(self):
         super(Resource,self).__init__()
