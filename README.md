@@ -1,3 +1,3 @@
 # soda-automation
 
-Flask Webapp to automate common tasks for SoDA
+Flask Rest-API to automate common tasks for SoDA
