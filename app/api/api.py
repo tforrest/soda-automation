@@ -1,11 +1,10 @@
 from flask_restful import Resource, fields
 from flask_restful import reqparse
 from flask import request
-from util import validate_memmber
-from util import bad_resp_match
-
-from redis import init_redis
+from util.util import validate_memmber
+from util.util import bad_resp_match
 from mailchimp import chimp
+from redis_ops.init_redis import RedisService
 
 requester = chimp.ChimpRequester()
 
@@ -34,7 +33,7 @@ class MailChimpMember(Resource):
     """Check if a student is in mailchimp"""
     def __init__(self):
         super(Resource,self).__init__()
-        self.redis_server = init_redis.init_redis_with_mailchimp()
+        self.redis_service = RedisService()
     
     def get(self,asu_id):
         """GET to see if a member is part of soda"""
@@ -47,6 +46,6 @@ class MailChimpMember(Resource):
 
     def _is_mailchimp_member(self,asu_id):
         """Check if asu student is part of soda mailchimp list"""
-        if self.redis_server.get(asu_id):
+        if self.redis_service.redis_server.get(asu_id):
             return True
         return False

@@ -1,10 +1,10 @@
-import os
-import redis
 from flask import Flask 
 from flask_sqlalchemy import SQLAlchemy
 from flask_restful import Api
+import os
 from api import api
-from redis.init_redis import init_redis_with_mailchimp
+
+
 
 
 
