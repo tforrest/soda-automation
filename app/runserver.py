@@ -3,15 +3,17 @@ from config.config import app
 
 manager = Manager(app)
 
+# Deploy for development
 @manager.command
-def run_local():
+def run_dev():
     app.run(debug=True)
 
+# Deploy for intergation tests
 @manager.command
 def run_test():
     # To-Do
     pass
-
+# Deploy for production 
 @manager.command
 def run_production():
     # TO-DO
