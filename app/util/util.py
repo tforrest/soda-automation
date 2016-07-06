@@ -1,9 +1,46 @@
+from cerberus import Validator
+
 from copy import deepcopy
-import logging
 from time import gmtime, strftime
+import logging
 import re
 
-resp_match = lambda status: re.match(r"^[4,5][0-9][0-9]$",status)
+# schemas 
+student_schema = {
+    'fname': {
+        'required': True, 
+        'type':'string',
+    },
+    'last_name': {
+        'required': True, 
+        'type':'string',
+    },
+    'email_address': {
+        'required': True, 
+        'type':'string',
+    },
+    'number': {
+        'type':'string',
+    },
+    'asuid': {
+        'required': True, 
+        'type':'string',
+    },
+    'class': { 
+        'type':'string',
+    }
+}
+
+bad_resp_match = lambda status: re.match(r"^[4,5][0-9][0-9]$",status)
+
+v = Validator()
+
+def validate_memmber(data):
+    """Util function to validate incoming json"""
+    if v.validate(data, student_schema):
+        return (True,None)
+    else:
+        return (False,v.errors)
 
 
 mailchimp_shell_member = {
@@ -22,7 +59,7 @@ def handle_chimp_response(func):
     """
     def wrapper(*args,**kwargs):
         r = func(*args,**kwargs)
-        if resp_match(str(r.status_code)):
+        if bad_resp_match(str(r.status_code)):
             logging.error("Failed to execute mailchimp command")
             logging.error(r.json())
         else:
@@ -42,6 +79,19 @@ def transform_member(func):
         # set and return transformed data
         return func(args[0],args[1],processed)
     return wrapper
+
+def transform_mailchimp_response(json_response):
+    l = []
+    for member in json_response['members']:
+        data = dict()
+        data["ID"] = member["id"]
+        data["EMAIL"] = member["email_address"]
+        
+        # copy data in merge_fields
+        temp = member["merge_fields"].copy()
+        data.update(temp)
+        l.append(data)
+    return l
            
 
 class FailedTransform(Exception):

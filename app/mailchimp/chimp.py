@@ -1,6 +1,6 @@
 from requests.auth import HTTPBasicAuth
-from util import handle_chimp_response
-from util import transform_member
+from util.util import handle_chimp_response
+from util.util import transform_member
 from json import dumps
 import requests
 import os
@@ -62,13 +62,11 @@ class ChimpRequester(object):
          json_respose = self._post_request(path,data)
          return json_respose
 
-    def get_list(self,list_id,list_name,json=False):
+    def get_list(self,list_id):
         """"Return a list of people on  
             a mail chimp list 
         """
-        
         path = "lists/{}/members".format(list_id)
-        
         json_response = self._get_request(path)
         return json_response
 
@@ -159,4 +157,3 @@ class ChimpMember(object):
             number=self.phone_number, \
             asuid=self.asu_id,
             class_standing=self.class_standing))
-    
