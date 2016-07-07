@@ -17,6 +17,6 @@ service.add_resource(api.MailChimpMember,'/member/<asu_id>',endpoint='member')
 # setup local basic redis server
 # TO-DO more robust config process
 # set up database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['FLASKDB']
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['FLASKDB']
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# db = SQLAlchemy(app)
