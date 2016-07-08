@@ -12,8 +12,9 @@ from api import api
 app = Flask(__name__)
 # set up Api
 service = Api(app)
-service.add_resource(api.MailChimpList,'/list/<list_id>',endpoint='list')
-service.add_resource(api.MailChimpMember,'/member/<asu_id>',endpoint='member')
+service.add_resource(api.MailChimpList,'/api/list/<list_id>',endpoint='list')
+service.add_resource(api.MailChimpMember,'/api/member/<asu_id>',endpoint='member')
+service.add_resource(api.GenerateAuthToken,'/api/gen_token',endpoint='token')
 # setup local basic redis server
 # TO-DO more robust config process
 # set up database

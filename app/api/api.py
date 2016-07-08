@@ -1,6 +1,8 @@
 from flask_restful import Resource, fields
 from flask_restful import reqparse
 from flask import request
+
+from util.danger import gen_auth_token
 from util.util import validate_memmber
 from util.util import bad_resp_match
 from mailchimp import chimp
@@ -48,3 +50,22 @@ class MailChimpMember(Resource):
         if self.redis_service.redis_server.get(asu_id):
             return True
         return False
+
+class GenerateAuthToken(Resource):
+    """Resource to create auth token"""
+
+    def get(self):
+    """Return a valid token if basic_auth is successful"""
+    auth = request.authorization
+    if not auth:
+        return {"Error":"Auth not found"}, 400
+    if not check_basic_auth(auth):
+        return {"Error": "Invalid Auth"}, 401
+
+    token = gen_auth_token(auth.username)
+    resp = {
+        "Success!": "Token created",
+        "token": token,
+    }
+
+    return resp,201
