@@ -6,6 +6,7 @@ from util.danger import gen_auth_token
 from util.util import validate_memmber
 from util.util import bad_resp_match
 from mailchimp import chimp
+from models.user import User
 from redis_ops.init_redis import RedisService
 
 requester = chimp.ChimpRequester()
@@ -59,7 +60,7 @@ class GenerateAuthToken(Resource):
     auth = request.authorization
     if not auth:
         return {"Error":"Auth not found"}, 400
-    if not check_basic_auth(auth):
+    if not self._check_basic_auth(auth):
         return {"Error": "Invalid Auth"}, 401
 
     token = gen_auth_token(auth.username)
@@ -69,3 +70,16 @@ class GenerateAuthToken(Resource):
     }
 
     return resp,201
+
+    def _check_basic_auth(self,auth):
+        """Check if basic auth is correct"""
+        u = auth.username
+        p = auth.password
+        if not u or not p:
+            return False
+        db_user = User.filter_by(user_name=u).first()
+        if not db_user or not db_user.check_pass(p)
+            return False
+        return True 
+        
+
