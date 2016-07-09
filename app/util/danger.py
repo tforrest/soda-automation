@@ -26,7 +26,7 @@ def verify_auth_token(token):
     try:
         user = s.loads(token)
     except Exception as e:
-        logging.info(e)
+        logging.warning("Bad token")
         abort(401)
     return user
 
@@ -36,7 +36,7 @@ def enable_auth(func):
         re = flask_request
         # deny if not authorized
         if not re.headers.has_key("Authorization"):
-            logging.info("No token found")
+            logging.warning("No token found")
             abort(401)
         auth = re.headers.get("Authorization").split(" ")
         # proces token 
