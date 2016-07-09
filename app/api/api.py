@@ -52,7 +52,7 @@ class MailChimpMember(Resource):
 
     def _is_mailchimp_member(self,asu_id):
         """Check if asu student is part of soda mailchimp list"""
-        return self.redis_service.redis_server.get(asu_id):
+        return self.redis_service.redis_server.get(asu_id)
             
 
 class GenerateAuthToken(Resource):
