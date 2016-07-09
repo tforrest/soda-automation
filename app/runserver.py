@@ -16,10 +16,11 @@ def setup_api(app):
 
     return app
 
+serviced_app = setup_api(app)
+
 # Deploy for development
 @manager.command
 def run_dev():
-    serviced_app = setup_api(app)
     serviced_app.run(debug=True)
 
 # Deploy for intergation tests
