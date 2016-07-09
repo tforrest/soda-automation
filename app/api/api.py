@@ -14,7 +14,6 @@ from redis_ops.init_redis import RedisService
 
 requester = chimp.ChimpRequester()
 
-
 class MailChimpList(Resource):
     """Rest API for parsing MailChimp List Data"""
     method_decorators = [enable_auth]
@@ -53,9 +52,8 @@ class MailChimpMember(Resource):
 
     def _is_mailchimp_member(self,asu_id):
         """Check if asu student is part of soda mailchimp list"""
-        if self.redis_service.redis_server.get(asu_id):
-            return True
-        return False
+        return self.redis_service.redis_server.get(asu_id):
+            
 
 class GenerateAuthToken(Resource):
     """Resource to create auth token"""
