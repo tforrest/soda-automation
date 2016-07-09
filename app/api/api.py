@@ -12,6 +12,8 @@ from mailchimp import chimp
 from models.user import User
 from redis_ops.init_redis import RedisService
 
+import logging
+
 class MailChimpList(Resource):
     """Rest API for parsing MailChimp List Data"""
     method_decorators = [enable_auth]
@@ -59,12 +61,10 @@ class GenerateAuthToken(Resource):
     def get(self):
         """Return a valid token if basic_auth is successful"""
         auth = request.authorization
-        if not auth:
-            return {"Error":"Auth not found"}, 400
-        if not self._check_basic_auth(auth):
-            return {"Error": "Invalid Auth"}, 401
-
+        
+        self._check_basic_auth(auth)
         token = gen_auth_token(auth.username)
+    
         resp = {
             "Success!": "Token created",
             "token": token,
@@ -73,12 +73,16 @@ class GenerateAuthToken(Resource):
 
     def _check_basic_auth(self,auth):
         """Check if basic auth is correct"""
+        if not auth:
+            logging.info("Basic Auth not found")
+            abort(400)
         u = auth.username
-        p = auth.password
-        if not u or not p:
-            return False
         db_user = User.filter_by(user_name=u).first()
-        if not db_user or not db_user.check_pass(p):
-            return False
+        if not db_user:
+            logging.info("User not found")
+            abort(400)
+        if db_user.check_pass(p):
+            logging.info("Bad password!")
+            abort(401)
         return True 
         
