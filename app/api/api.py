@@ -12,13 +12,12 @@ from mailchimp import chimp
 from models.user import User
 from redis_ops.init_redis import RedisService
 
-requester = chimp.ChimpRequester()
-
 class MailChimpList(Resource):
     """Rest API for parsing MailChimp List Data"""
     method_decorators = [enable_auth]
     def __init__(self):
         super(Resource,self).__init__()
+        self.requester = chimp.ChimpRequester()
 
     def post(self,list_id):
         """Add a member(s) to a list"""
@@ -27,7 +26,7 @@ class MailChimpList(Resource):
         v = validate_memmber(data)
         if not v[0]:
             return v[1], 400
-        result = requester.add_member(list_id,data)
+        result = self.requester.add_member(list_id,data)
         if not result:
             return {"Errors" : {
                 "MailChimp":"Failure to insert member",
