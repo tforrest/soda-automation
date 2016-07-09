@@ -7,7 +7,12 @@ import os
 
 def gen_auth_token(id,expiration=10000):
     """Generate auth token"""
-    s = Serializer(os.environ['API_KEY'],expires_in=expiration)
+    try:
+        s = Serializer(os.environ['API_KEY'],expires_in=expiration)
+    except KeyError:
+        logging.fatal("No API_KEY env")
+        abort(500)
+
     return s.dumps({'id':id})
 
 def verify_auth_token(token):
@@ -15,6 +20,7 @@ def verify_auth_token(token):
     try:
         s = Serializer(os.environ['API_KEY'])
     except KeyError:
+        logging.fatal("No API_KEY env")
         abort(500)
     # check the token and throw respective exception
     try:
@@ -30,6 +36,7 @@ def enable_auth(func):
         re = flask_request
         # deny if not authorized
         if not re.headers.has_key("Authorization"):
+            logging.info("No token found")
             abort(401)
         auth = re.headers.get("Authorization").split(" ")
         # proces token 
