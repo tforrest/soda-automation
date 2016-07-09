@@ -17,6 +17,7 @@ requester = chimp.ChimpRequester()
 
 class MailChimpList(Resource):
     """Rest API for parsing MailChimp List Data"""
+    method_decorators = [enable_auth]
     def __init__(self):
         super(Resource,self).__init__()
 
@@ -71,7 +72,6 @@ class GenerateAuthToken(Resource):
             "Success!": "Token created",
             "token": token,
         }
-
         return resp,201
 
     def _check_basic_auth(self,auth):
