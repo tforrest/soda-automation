@@ -1,7 +1,5 @@
-from config import db
 from passlib.apps import custom_app_context as pwd_context
-
-import os
+from config import db
 
 class User(db.Model):
     """Basic user model for token creation"""
@@ -16,6 +14,6 @@ class User(db.Model):
     def check_pass(self,pwd):
         """Checks if the password is correct"""
         return pwd_context.verify(pwd, self.password)
-    
-        
 
+    def __str__(self):
+        return "User: %s".format(self.user_name)
