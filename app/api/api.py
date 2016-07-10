@@ -1,6 +1,6 @@
 from flask_restful import Resource, fields
 from flask_restful import reqparse
-from flask import request
+from flask import request, abort
 
 from util.danger import gen_auth_token
 from util.danger import enable_auth
@@ -61,7 +61,7 @@ class GenerateAuthToken(Resource):
     def get(self):
         """Return a valid token if basic_auth is successful"""
         auth = request.authorization
-        
+
         self._check_basic_auth(auth)
         token = gen_auth_token(auth.username)
     
@@ -77,12 +77,11 @@ class GenerateAuthToken(Resource):
             logging.info("Basic Auth not found")
             abort(400)
         u = auth.username
-        db_user = User.filter_by(user_name=u).first()
+        db_user = User.query.filter_by(user_name=u).first()
         if not db_user:
             logging.info("User not found")
             abort(400)
-        if db_user.check_pass(p):
+        if not db_user.check_pass(auth.password):
             logging.info("Bad password!")
             abort(401)
-        return True 
         
