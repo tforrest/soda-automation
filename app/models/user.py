@@ -6,8 +6,13 @@ class User(db.Model):
     id = db.Column(db.Integer,primary_key=True)
     user_name = db.Column(db.String(60), index=True)
     password = db.Column(db.String(60))
+    def __init__(self,id,name,password):
+        self.id = id
+        self.user_name = user_name
+        self.password = self._hash_pass(password)
+
     # dont expose through the API!
-    def hash_pass(self,pwd):
+    def _hash_pass(self,pwd):
         """Hash Password to store"""
         self.password = pwd_context.encrypt(pwd)
     
