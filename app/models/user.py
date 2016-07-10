@@ -11,7 +11,6 @@ class User(db.Model):
         self.user_name = user_name
         self.password = self._hash_pass(password)
 
-    # dont expose through the API!
     def _hash_pass(self,pwd):
         """Hash Password to store"""
         self.password = pwd_context.encrypt(pwd)
