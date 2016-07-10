@@ -15,14 +15,18 @@ from redis_ops.init_redis import RedisService
 import logging
 
 class MailChimpList(Resource):
-    """Rest API for parsing MailChimp List Data"""
+    """
+    MailChimpList endpoint adds member(s) to MailChimpList
+    """
     method_decorators = [enable_auth]
     def __init__(self):
         super(Resource,self).__init__()
         self.requester = chimp.ChimpRequester()
 
     def post(self,list_id):
-        """Add a member(s) to a list"""
+        """
+        Add a member(s) to a list
+        """
         data = request.get_json()
         # check if valid request
         v = validate_memmber(data)
@@ -36,14 +40,18 @@ class MailChimpList(Resource):
         return r.json(),r.status_code
 
 class MailChimpMember(Resource):
-    """Check if a student is in mailchimp"""
+    """
+    MailChimpMember endpoint checks if someone is part of a list 
+    """
     method_decorators = [enable_auth]
     def __init__(self):
         super(Resource,self).__init__()
         self.redis_service = RedisService()
 
     def get(self,asu_id):
-        """GET to see if a member is part of soda"""
+        """
+        GET to see if a member is part of a <list>
+        """
         if self._is_mailchimp_member(asu_id):
             return {"Success":
             "Member signed up on mailchimp!Yay:)"},201
@@ -56,10 +64,14 @@ class MailChimpMember(Resource):
         return self.redis_service.redis_server.get(asu_id)
             
 
-class GenerateAuthToken(Resource):
-    """Resource to create auth token"""
+class MailChimpMember(Resource):
+    """
+    MailChimpMember endpoint creates a token if basic auth is accepted
+    """
     def get(self):
-        """Return a valid token if basic_auth is successful"""
+        """
+        GET a valid token if basic_auth is successful
+        """
         auth = request.authorization
 
         self._check_basic_auth(auth)
@@ -72,7 +84,9 @@ class GenerateAuthToken(Resource):
         return resp,201
 
     def _check_basic_auth(self,auth):
-        """Check if basic auth is correct"""
+        """
+        _check_basic_auth validates basic auth
+        """
         if not auth:
             logging.info("Basic Auth not found")
             abort(400)
