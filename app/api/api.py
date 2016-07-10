@@ -64,9 +64,9 @@ class MailChimpMember(Resource):
         return self.redis_service.redis_server.get(asu_id)
             
 
-class MailChimpMember(Resource):
+class GenerateAuthToken(Resource):
     """
-    MailChimpMember endpoint creates a token if basic auth is accepted
+    GenerateAuthToken endpoint creates a token if basic auth is accepted
     """
     def get(self):
         """

@@ -74,9 +74,9 @@ class ChimpRequester(object):
         """
         add_member adds a new contact to a mailchimp list
         """
-         path = "lists/{}/members/".format(list_id)
-         json_respose = self._post_request(path,data)
-         return json_respose
+        path = "lists/{}/members/".format(list_id)
+        json_respose = self._post_request(path,data)
+        return json_respose
 
     def get_list(self,list_id):
         """"
