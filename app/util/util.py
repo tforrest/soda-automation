@@ -85,11 +85,15 @@ def transform_mailchimp_response(json_response):
     for member in json_response['members']:
         data = dict()
         data["ID"] = member["id"]
-        data["EMAIL"] = member["email_address"]
+        data["email_address"] = member["email_address"]
         
         # copy data in merge_fields
         temp = member["merge_fields"].copy()
-        data.update(temp)
+        data["First_Name"] = temp['FNAME']
+        data["Last_Name"] = temp['LNAME']
+        data["ASU_ID"] = temp['ASUID']
+        data["phone_number"] = temp['NUMBER']
+      
         l.append(data)
     return l
            

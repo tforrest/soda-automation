@@ -34,8 +34,9 @@ class RedisService(object):
                 logging.error("Shutting Down Service")
                 sys.exit(1)
             mailchimp_list = transform_mailchimp_response(resp.json())
+
             for m in mailchimp_list:
-                self.redis_server.set(m['ASUID'],m)
+                self.redis_server.set(m['ASU_ID'],m)
 
         except Exception as e:
             logging.error("Failure to Setup Redis")
