@@ -11,18 +11,16 @@ class RedisService(object):
     """Wrapper class to control redis"""
 
     def __init__(self):
-        self.redis_server = self._init_and_pull()
+        self.redis_server = self.connect_to_redis()
     
-    def _init_and_pull(self):
-        redis_server = self.connect_to_redis()
-        self.init_redis_with_mailchimp(redis_server)
-        return redis_server
+    def pull_mailchimp(self):
+        self._init_redis_with_mailchimp()
 
     def connect_to_redis(self):
         redis_server = redis.StrictRedis(host='localhost', port=6379, db=0)
         return redis_server
 
-    def init_redis_with_mailchimp(self,redis_server):
+    def _init_redis_with_mailchimp(self):
         """Inserts ASUIDs into redis for quick access""" 
         try:
             default_list = os.environ['DEFAULT_MAILCHIMP_LIST']
@@ -35,19 +33,15 @@ class RedisService(object):
                 logging.error(resp.json())
                 logging.error("Shutting Down Service")
                 sys.exit(1)
-
             mailchimp_list = transform_mailchimp_response(resp.json())
             for m in mailchimp_list:
-                logging.info(m)
-                redis_server.set(m['ASUID'],True)
-            logging.info("Inserted into redis")
+                self.redis_server.set(m['ASUID'],m)
 
         except Exception as e:
             logging.error("Failure to Setup Redis")
             logging.error(e)
             logging.error("Shutting Down Service")
             sys.exit(1)
-
 
 
 

@@ -2,6 +2,7 @@ from flask_script import Manager
 from flask_restful import Api
 
 from models.user import User
+from redis_ops.init_redis import RedisService
 from config import app
 from config import db
 
@@ -31,6 +32,8 @@ def setup_dev():
     """
     Setup dev environment 
     """
+
+    # setup database for admin
     db.create_all()
     try:
         admin_user_name = os.environ['DEV_ADMIN_USER_NAME']
@@ -48,6 +51,11 @@ def setup_dev():
         logging.fatal(e)
         logging.fatal("Error cannot setup dev environment")
         sys.exit(2)
+
+    # init redis and populate with mailchimp 
+    r = RedisService()
+
+    r.pull_mailchimp()
 
 @manager.command
 def run_dev():

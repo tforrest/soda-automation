@@ -52,14 +52,14 @@ class MailChimpMember(Resource):
         """
         GET to see if a member is part of a <list>
         """
-        if self._is_mailchimp_member(asu_id):
-            return {"Success":
-            "Member signed up on mailchimp!Yay:)"},201
+        member = self._get_mailchimp_member(asu_id)
+        if member:
+            return {"member":member},201
         else:
             return {"Not Found":
             "Student not signed up for mailchimp. Please sign up!:)"}, 404
 
-    def _is_mailchimp_member(self,asu_id):
+    def _get_mailchimp_member(self,asu_id):
         """Check if asu student is part of soda mailchimp list"""
         return self.redis_service.redis_server.get(asu_id)
             
