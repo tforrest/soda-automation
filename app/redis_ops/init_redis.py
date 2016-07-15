@@ -2,6 +2,8 @@ from mailchimp import chimp
 from util.util import bad_resp_match
 from util.util import transform_mailchimp_response
 
+import base64
+import json
 import redis
 import logging
 import os
@@ -36,7 +38,10 @@ class RedisService(object):
             mailchimp_list = transform_mailchimp_response(resp.json())
 
             for m in mailchimp_list:
-                self.redis_server.set(m['ASU_ID'],m)
+                id = m['ASU_ID']
+                m = json.dumps(m)
+                m = base64.b64encode(m)
+                self.redis_server.set(id,m)
 
         except Exception as e:
             logging.error("Failure to Setup Redis")

@@ -1,6 +1,6 @@
 from flask_restful import Resource, fields
 from flask_restful import reqparse
-from flask import request, abort
+from flask import request, abort, jsonify
 
 from util.danger import gen_auth_token
 from util.danger import enable_auth
@@ -13,6 +13,8 @@ from models.user import User
 from redis_ops.init_redis import RedisService
 
 import logging
+import base64
+import json
 
 class MailChimpList(Resource):
     """
@@ -53,8 +55,10 @@ class MailChimpMember(Resource):
         GET to see if a member is part of a <list>
         """
         member = self._get_mailchimp_member(asu_id)
+
         if member:
-            return {"member":member},201
+            member = base64.b64decode(member)
+            return json.loads(member), 201
         else:
             return {"Not Found":
             "Student not signed up for mailchimp. Please sign up!:)"}, 404
