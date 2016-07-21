@@ -1,5 +1,6 @@
 from util.util import handle_chimp_response
 from util.util import transform_member
+from util.util import bad_resp_match
 
 from requests.auth import HTTPBasicAuth
 from json import dumps
@@ -79,12 +80,21 @@ class ChimpRequester(object):
         return json_respose
 
     def get_list(self,list_id):
-        """"
+        """
         get_list returns a list of people on a mail chimp list 
         """
         path = "lists/{}/members".format(list_id)
         json_response = self._get_request(path)
         return json_response
+   
+    def is_list(self,list_id):
+        """
+        Check if a list exsits in MailChimp
+        """
+        path = "lists/{}".format(list_id)
+        json_response = self._get_request(path)
+
+        return bad_resp_match(str(json_response.status_code))
 
 
 # helper classes to be used at a later time  

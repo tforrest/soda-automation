@@ -10,67 +10,72 @@ from util.util import bad_resp_match
 from mailchimp import chimp
 
 from models.user import User
-from redis_ops.init_redis import RedisService
+from models.redis_db import MailChimpRedis
+from redis_ops.init_redis import RedisPopulater
 
 import logging
+import time
 import base64
 import json
+import re
+
+class MailChimpListCheck(Resource):
+    """
+    MailChimpListCheck lists the available mailchimp lists to query from 
+    /api/lists/
+    """
+    method_decorators = [enable_auth]
+
+    def __init__(self):
+        super(Resource,self).__init__()
+        self.redis_ops = RedisPopulater()
+        
+    def get(self):
+        """
+        GET the lists available to query
+        """
+        mailchimp_list_info = self.redis_ops.get_redis_info()
+
+        if not mailchimp_list_info:
+
+            return {"Not Data":"Redis empty! Check your config:)"},200
+
+        return mailchimp_list_info, 202 
+
 
 class MailChimpList(Resource):
     """
     MailChimpList endpoint adds member(s) to MailChimpList
     """
     method_decorators = [enable_auth]
+
     def __init__(self):
         super(Resource,self).__init__()
-        self.requester = chimp.ChimpRequester()
+        self.redis_ops = RedisPopulater()
 
-    def post(self,list_id):
+    def get(self,list_id,asu_id):
         """
-        Add a member(s) to a list
+        GET a member in redis or create pool of that id
         """
-        data = request.get_json()
-        # check if valid request
-        v = validate_memmber(data)
-        if not v[0]:
-            return v[1], 400
-        result = self.requester.add_member(list_id,data)
-        if not result:
-            return {"Errors" : {
-                "MailChimp":"Failure to insert member",
-            }}, 418
-        return r.json(),r.status_code
 
-class MailChimpMember(Resource):
-    """
-    MailChimpMember endpoint checks if someone is part of a list 
-    """
-    method_decorators = [enable_auth]
-    def __init__(self):
-        super(Resource,self).__init__()
-        self.redis_service = RedisService()
+        mailchimp_list = self.redis_ops.get_list_db(list_id)
 
-    def get(self,asu_id):
-        """
-        GET to see if a member is part of a <list>
-        """
-        member = self._get_mailchimp_member(asu_id)
+        if not mailchimp_list:
+            return {"List Unavailable": "Mailchimp List {} not stored".format(list_id)}, 404
+        
+        member = mailchimp_list.redis_server.get(asu_id)
 
-        if member:
-            member = base64.b64decode(member)
-            return json.loads(member), 201
-        else:
-            return {"Not Found":
-            "Student not signed up for mailchimp. Please sign up!:)"}, 404
+        if not member:
+            return {"Member Status": False}, 200
 
-    def _get_mailchimp_member(self,asu_id):
-        """Check if asu student is part of soda mailchimp list"""
-        return self.redis_service.redis_server.get(asu_id)
-            
+        member = base64.b64decode(member)
+        
+        return {"member_status": True,"member_info":json.loads(member)}, 200
 
 class GenerateAuthToken(Resource):
     """
     GenerateAuthToken endpoint creates a token if basic auth is accepted
+    /api/gen_token/
     """
     def get(self):
         """
@@ -102,4 +107,3 @@ class GenerateAuthToken(Resource):
         if not db_user.check_pass(auth.password):
             logging.info("Bad password!")
             abort(401)
-        

@@ -2,7 +2,7 @@ from flask_script import Manager
 from flask_restful import Api
 
 from models.user import User
-from redis_ops.init_redis import RedisService
+from redis_ops.init_redis import RedisPopulater
 from config import app
 from config import db
 
@@ -19,19 +19,26 @@ def setup_api(app):
     Config resources with flask app
     """
     service = Api(app)
-    service.add_resource(api.MailChimpList,'/api/list/<list_id>',endpoint='list')
-    service.add_resource(api.MailChimpMember,'/api/member/<asu_id>',endpoint='member')
-    service.add_resource(api.GenerateAuthToken,'/api/gen_token',endpoint='token')
+    service.add_resource(api.MailChimpListCheck,'/api/lists/',endpoint='check_mailchimp')
+    service.add_resource(api.MailChimpList,'/api/lists/<list_id>/<asu_id>',endpoint='member_list')
+    service.add_resource(api.GenerateAuthToken,'/api/gen_token/',endpoint='token')
 
     return app
 
 serviced_app = setup_api(app)
 
+def setup_redis():
+   
+    try:
+        RedisPopulater().init_redis_dbs()
+    except Exception as e:
+        logging.fatal(e)
+        logging.fatal("Failure to init redis")
+        sys.exit(1)
+
+
 # Deploy for development
 def setup_dev():
-    """
-    Setup dev environment 
-    """
 
     # setup database for admin
     db.create_all()
@@ -53,9 +60,9 @@ def setup_dev():
         sys.exit(2)
 
     # init redis and populate with mailchimp 
-    r = RedisService()
+    setup_redis()
 
-    r.pull_mailchimp()
+
 
 @manager.command
 def run_dev():
