@@ -125,10 +125,13 @@ class RedisPopulater(object):
     def _read_mailchimp_config(self):
 
         try:
-            with open("/Users/thomas/PersonalProjects/soda-twilio-service/app/redis_ops/config_mailchimp.json") as json_file:
+            config_path = os.environ['MAILCHIMP_LIST_CONFIG']
+
+            with open(config_path) as json_file:
                 data = json.load(json_file)
                 return data['mailchimp_lists']
-        except:
+        except Exception as e:
+            logging.error(e)
             logging.error("Failure to read config for mailchimp")
             return None
 
